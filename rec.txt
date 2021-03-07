@@ -1,0 +1,33 @@
+Id,Title,Ings
+1,Idly
+2,Dosa,["batter", "water"]
+3,Egg
+4,Dosa,["batter", "water","egg"]
+6,Egg
+7,Dosa,["batter", "water","nuts"]
+8,Egg
+
+
+SQL - NoSQL
+
+SQL - Structure Query Language - Google sheet 
+- MySQL, Postgres, Pl/SQL
+Vertical Scaling - Inc RAM, Inc Processor - 1PC
+
+NoSQL
+- JSON - Documents
+MongoDB - BSON - Binary encoding JSON
+- Database
+ - Collections(s)
+  - Document(s)
+Cassandra - Netflix
+firebase
+DynamoDB
+Redis
+
+- Schemaless - flexible
+- Fast - no joins 
+- Scaling
+
+Horizontal Scaling - xMultiplying PC - 1GB Ram, 2GHz Processor
+- 10PC - AWS, GCP, Azure
