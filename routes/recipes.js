@@ -1,4 +1,5 @@
 import Express from "express";
+import { Recipe } from "../models/recipes.js";
 import { recipes } from "../recipes.js";
 const router = Express.Router();
 
@@ -10,22 +11,41 @@ router.use((req, res, next) => {
 
 router
   .route("/")
-  .get((request, response) => {
-    console.log(request.query);
+  .get(async (request, response) => {
+    // console.log(request.query);
 
-    const queryMatch = request.query.ings
-      ? recipes.filter(
-          (recipe) =>
-            request.query.like === `${recipe.like}` &&
-            recipe.ings.includes(request.query.ings)
-        )
-      : recipes;
-    console.log(queryMatch);
-    response.send(queryMatch);
+    // const queryMatch = request.query.ings
+    //   ? recipes.filter(
+    //       (recipe) =>
+    //         request.query.like === `${recipe.like}` &&
+    //         recipe.ings.includes(request.query.ings)
+    //     )
+    //   : recipes;
+    // console.log(queryMatch);
+    // response.send(queryMatch);
+
+    try {
+      const recipes = await Recipe.find();
+      response.json(recipes);
+    } catch (err) {
+      response.send("Hello world4");
+    }
   })
-  .post((request, response) => {
+  .post(async (request, response) => {
     console.log(request.body);
-    response.send([...recipes, request.body]);
+
+    const recipe = new Recipe({
+      title: request.body.title,
+      ings: request.body.ings,
+      like: request.body.like,
+    });
+
+    try {
+      const newRecipe = await recipe.save();
+      response.send(newRecipe);
+    } catch (err) {
+      response.send(err);
+    }
   });
 
 router.route("/:id").get((request, response) => {
