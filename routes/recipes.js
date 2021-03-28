@@ -1,6 +1,5 @@
 import Express from "express";
 import { Recipe } from "../models/recipes.js";
-import { recipes } from "../recipes.js";
 const router = Express.Router();
 
 router.use((req, res, next) => {
@@ -12,23 +11,23 @@ router.use((req, res, next) => {
 router
   .route("/")
   .get(async (request, response) => {
-    // console.log(request.query);
+    let filter = {};
 
-    // const queryMatch = request.query.ings
-    //   ? recipes.filter(
-    //       (recipe) =>
-    //         request.query.like === `${recipe.like}` &&
-    //         recipe.ings.includes(request.query.ings)
-    //     )
-    //   : recipes;
-    // console.log(queryMatch);
-    // response.send(queryMatch);
-
+    if (request.query.like) {
+      filter.like = request.query.like;
+    }
+    if (request.query.ings) {
+      filter.ings = new RegExp(request.query.ings, "i");
+    }
+    if (request.query.title) {
+      filter.title = request.query.title;
+    }
+    // Batter or batter or BaTTer  /batter/i
     try {
-      const recipes = await Recipe.find();
+      const recipes = await Recipe.find(filter);
       response.json(recipes);
     } catch (err) {
-      response.send("Hello world4");
+      response.send(err);
     }
   })
   .post(async (request, response) => {
@@ -48,18 +47,28 @@ router
     }
   });
 
-router.route("/:id").get((request, response) => {
-  console.log("From id: ", request.time);
-  const searchRecipe = recipes.find(
-    (recipe) => recipe.id === +request.params.id
-  );
-
-  const searchFilterRecipe = recipes.filter(
-    (recipe) => recipe.id === +request.params.id
-  );
-
-  console.log(searchRecipe, searchFilterRecipe);
-  response.send(searchRecipe);
-  // response.send(searchFilterRecipe);
+router.route("/:id").get(async (request, response) => {
+  console.log("From id: ", request.time, request.params.id);
+  try {
+    const recipes = await Recipe.findById(request.params.id);
+    response.json(recipes);
+  } catch (err) {
+    response.send(err);
+  }
 });
+
 export default router;
+
+// Recipe table
+// Recipe id -> recipe
+// 2 -> Dosa
+
+// Ings table
+// Ings id -> ings
+// 3 -> Batter
+// 4 -> Water
+
+// Join table
+// Recipe id -> Ings ID
+// 2 -> 3
+// 2 -> 4
